@@ -7402,7 +7402,7 @@ static int smbchg_battery_get_property(struct power_supply *psy,
 #ifdef SUPPORT_INVAILD_CHARGER_CHARGE
 	case POWER_SUPPLY_PROP_POWER_NOW:
 		val->intval = chip->is_invalid_charger;
-
+#endif
 #ifndef CONFIG_QPNP_LEGACY_CYCLE_COUNT
 	case POWER_SUPPLY_PROP_CYCLE_COUNT:
 		val->intval = get_prop_batt_cycle_count(chip);
