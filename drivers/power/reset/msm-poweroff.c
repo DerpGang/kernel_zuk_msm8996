@@ -288,8 +288,14 @@ static void msm_restart_prepare(const char *cmd)
 				strcmp(cmd, "userrequested")));
 	}
 
-	/* To preserve console-ramoops */
-	need_warm_reset = true;
+	/* Force warm reset and allow device to
+	 * preserve memory on restart 
+	 * only for bootloader and recovery commands */
+	if (cmd != NULL) {
+		if ((!strncmp(cmd, "bootloader", 10)) ||
+				(!strncmp(cmd, "recovery", 8)))
+			need_warm_reset = true;
+	}
 
 	/* Hard reset the PMIC unless memory contents must be maintained. */
 	if (need_warm_reset) {
@@ -338,10 +344,14 @@ static void msm_restart_prepare(const char *cmd)
 			set_dload_mode(1);
 			in_panic = 1;
 		} else {
+			pr_notice("%s : cmd is %s, set to reboot mode\n", __func__, cmd);
+			qpnp_pon_set_restart_reason(PON_RESTART_REASON_REBOOT);
 			__raw_writel(0x77665501, restart_reason);
 		}
-	} else if (in_panic) {
-		__raw_writel(0x77665501, restart_reason);
+	} else {
+		pr_notice("%s : cmd is NULL, set to reboot mode\n", __func__);
+		qpnp_pon_set_restart_reason(PON_RESTART_REASON_REBOOT);
+		__raw_writel(0x776655AA, restart_reason);
 	}
 
 	flush_cache_all();
