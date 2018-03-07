@@ -8646,7 +8646,7 @@ static const struct snd_kcontrol_new tasha_snd_controls[] = {
 		0, -84, 40, digital_gain),
 	SOC_SINGLE_SX_TLV("RX6 Digital Volume", WCD9335_CDC_RX6_RX_VOL_CTL,
 		0, -84, 40, digital_gain),
-#ifndef CONFIG_SOUND_CONTROL
+#ifndef CONFIG_SOUND_CONTROL	
 	SOC_SINGLE_SX_TLV("RX7 Digital Volume", WCD9335_CDC_RX7_RX_VOL_CTL,
 		0, -84, 40, digital_gain),
 #endif
@@ -13922,7 +13922,7 @@ static struct attribute *sound_control_attrs[] = {
 		&headphone_gain_attribute.attr,
 		&mic_gain_attribute.attr,
 		&earpiece_gain_attribute.attr,
-                &speaker_gain_attribute.attr,
+	        &speaker_gain_attribute.attr,
 		NULL,
 };
 
