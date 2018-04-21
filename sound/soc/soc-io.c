@@ -16,6 +16,9 @@
 #include <linux/regmap.h>
 #include <linux/export.h>
 #include <sound/soc.h>
+#ifdef CONFIG_SOUND_CONTROL
+#include <linux/mfd/wcd9335/registers.h>
+#endif
 
 /**
  * snd_soc_component_read() - Read register value
