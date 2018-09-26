@@ -2322,7 +2322,7 @@ static int64_t get_batt_id(unsigned int battery_id_uv, u8 bid_info)
 static int get_sram_prop_now(struct fg_chip *chip, unsigned int type)
 {
 	if (fg_debug_mask & FG_POWER_SUPPLY)
-		pr_info("addr 0x%02X, offset %d value %d\n",
+		pr_debug("addr 0x%02X, offset %d value %d\n",
 			fg_data[type].address, fg_data[type].offset,
 			fg_data[type].value);
 
