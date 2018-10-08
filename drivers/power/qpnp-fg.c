@@ -1317,21 +1317,18 @@ static int fg_check_ima_exception(struct fg_chip *chip, bool check_hw_sts)
 		return rc;
 	}
 
-	rc = fg_read(chip, &hw_sts,
+		rc = fg_read(chip, &hw_sts,
 			chip->mem_base + MEM_INTF_IMA_HW_STS, 1);
 	if (rc) {
 		pr_err("Error in reading IMA_HW_STS, rc=%d\n", rc);
 		return rc;
 	}
-
-	pr_info_once("Initial ima_err_sts=%x ima_exp_sts=%x ima_hw_sts=%x\n",
+ 	pr_info_once("Initial ima_err_sts=%x ima_exp_sts=%x ima_hw_sts=%x\n",
 		err_sts, exp_sts, hw_sts);
-
-	if (fg_debug_mask & (FG_MEM_DEBUG_READS | FG_MEM_DEBUG_WRITES))
+ 	if (fg_debug_mask & (FG_MEM_DEBUG_READS | FG_MEM_DEBUG_WRITES))
 		pr_info("ima_err_sts=%x ima_exp_sts=%x ima_hw_sts=%x\n",
 			err_sts, exp_sts, hw_sts);
-
-	if (check_hw_sts) {
+ 	if (check_hw_sts) {
 		/*
 		 * Lower nibble should be equal to upper nibble before SRAM
 		 * transactions begins from SW side. If they are unequal, then
@@ -1344,8 +1341,7 @@ static int fg_check_ima_exception(struct fg_chip *chip, bool check_hw_sts)
 			run_err_clr_seq = true;
 		}
 	}
-
-	if (exp_sts & (IACS_ERR_BIT | XCT_ERR_BIT | DATA_RD_ERR_BIT |
+		if (exp_sts & (IACS_ERR_BIT | XCT_ERR_BIT | DATA_RD_ERR_BIT |
 		DATA_WR_ERR_BIT | ADDR_BURST_WRAP_BIT | ADDR_RNG_ERR_BIT |
 		ADDR_SRC_ERR_BIT)) {
 		pr_err("IMA exception bit set, exp_sts=%x\n", exp_sts);
@@ -1628,7 +1624,7 @@ static int __fg_interleaved_mem_read(struct fg_chip *chip, u8 *val, u16 address,
 
 		rc = fg_check_iacs_ready(chip);
 		if (rc) {
-			pr_err("IACS_RDY failed post read for address %x offset %d rc=%d\n",
+			pr_err("IACS_RDY failed post write to address %x offset %d rc=%d\n",
 				address, offset, rc);
 			return rc;
 		}
@@ -1712,8 +1708,8 @@ static int fg_interleaved_mem_config(struct fg_chip *chip, u8 *val,
 
 	rc = fg_check_iacs_ready(chip);
 	if (rc) {
-		pr_err("IACS_RDY failed before setting address: %x offset: %d rc=%d\n",
-			address, offset, rc);
+		pr_err("IACS_RDY failed post write to address %x offset %d rc=%d\n",
+				address, offset, rc);
 		return rc;
 	}
 
@@ -1726,8 +1722,8 @@ static int fg_interleaved_mem_config(struct fg_chip *chip, u8 *val,
 
 	rc = fg_check_iacs_ready(chip);
 	if (rc)
-		pr_err("IACS_RDY failed after setting address: %x offset: %d rc=%d\n",
-			address, offset, rc);
+		pr_err("IACS_RDY failed post write to address %x offset %d rc=%d\n",
+				address, offset, rc);
 
 	return rc;
 }
@@ -1772,12 +1768,12 @@ static int fg_interleaved_mem_read(struct fg_chip *chip, u8 *val, u16 address,
 			len, address, offset);
 
 retry:
-	if (count >= RETRY_COUNT) {
+     if (count >= RETRY_COUNT) {
 		pr_err("Retried reading 3 times\n");
 		retry = false;
 		goto out;
 	}
-
+	
 	rc = fg_interleaved_mem_config(chip, val, address, offset, len, 0);
 	if (rc) {
 		pr_err("failed to configure SRAM for IMA rc = %d\n", rc);
@@ -1876,12 +1872,12 @@ static int fg_interleaved_mem_write(struct fg_chip *chip, u8 *val, u16 address,
 			len, address, offset);
 
 retry:
-	if (count >= RETRY_COUNT) {
+     if (count >= RETRY_COUNT) {
 		pr_err("Retried writing 3 times\n");
 		retry = false;
 		goto out;
 	}
-
+	
 	rc = fg_interleaved_mem_config(chip, val, address, offset, len, 1);
 	if (rc) {
 		pr_err("failed to configure SRAM for IMA rc = %d\n", rc);
@@ -1909,7 +1905,7 @@ out:
 	ret = fg_masked_write(chip, MEM_INTF_CFG(chip), IMA_REQ_ACCESS, 0, 1);
 	if (ret)
 		pr_err("failed to reset IMA access bit ret = %d\n", ret);
-
+	
 	if (retry) {
 		retry = false;
 		goto retry;
@@ -3539,20 +3535,16 @@ static int fg_get_current_cc(struct fg_chip *chip)
 {
 	int cc_soc, rc;
 	int64_t current_capacity;
-
-	if (!(chip->wa_flag & USE_CC_SOC_REG))
+ 	if (!(chip->wa_flag & USE_CC_SOC_REG))
 		return chip->learning_data.cc_uah;
-
-	if (!chip->learning_data.learned_cc_uah)
+ 	if (!chip->learning_data.learned_cc_uah)
 		return -EINVAL;
-
-	rc = fg_get_cc_soc(chip, &cc_soc);
+ 	rc = fg_get_cc_soc(chip, &cc_soc);
 	if (rc < 0) {
 		pr_err("Failed to get cc_soc, rc=%d\n", rc);
 		return rc;
 	}
-
-	current_capacity = cc_soc * chip->learning_data.learned_cc_uah;
+ 	current_capacity = cc_soc * chip->learning_data.learned_cc_uah;
 	do_div(current_capacity, FULL_PERCENT_28BIT);
 	return current_capacity;
 }
@@ -3933,7 +3925,7 @@ static int fg_cap_learning_check(struct fg_chip *chip)
 		}
 
 		fg_cap_learning_stop(chip);
-	} else if (chip->status == POWER_SUPPLY_STATUS_FULL) {
+		} else if (chip->status == POWER_SUPPLY_STATUS_FULL) {
 		if (chip->wa_flag & USE_CC_SOC_REG) {
 			/* reset SW_CC_SOC register to 100% upon charge_full */
 			rc = fg_mem_write(chip, (u8 *)&cc_pc_100,
@@ -4114,8 +4106,7 @@ static void status_change_work(struct work_struct *work)
 			batt_soc = get_battery_soc_raw(chip);
 			if (!batt_soc)
 				return;
-
-			batt_soc = div64_s64((int64_t)batt_soc *
+ 			batt_soc = div64_s64((int64_t)batt_soc *
 					FULL_PERCENT_28BIT, FULL_PERCENT_3B);
 			rc = fg_mem_write(chip, (u8 *)&batt_soc,
 				CC_SOC_BASE_REG, 4, CC_SOC_OFFSET, 0);
@@ -4125,7 +4116,7 @@ static void status_change_work(struct work_struct *work)
 			else if (fg_debug_mask & FG_STATUS)
 				pr_info("Reset SW_CC_SOC to %x\n", batt_soc);
 		}
-
+		
 		/*
 		 * Schedule the update_temp_work whenever there is a status
 		 * change. This is essential for applying the slope limiter
@@ -5584,18 +5575,14 @@ done:
 static void get_default_rslow_comp_settings(struct fg_chip *chip)
 {
 	int offset;
-
-	offset = RSLOW_CFG_REG + RSLOW_CFG_OFFSET - BATT_PROFILE_OFFSET;
+ 	offset = RSLOW_CFG_REG + RSLOW_CFG_OFFSET - BATT_PROFILE_OFFSET;
 	memcpy(&chip->rslow_comp.rslow_cfg, chip->batt_profile + offset, 1);
-
-	offset = RSLOW_THRESH_REG + RSLOW_THRESH_OFFSET - BATT_PROFILE_OFFSET;
+ 	offset = RSLOW_THRESH_REG + RSLOW_THRESH_OFFSET - BATT_PROFILE_OFFSET;
 	memcpy(&chip->rslow_comp.rslow_thr, chip->batt_profile + offset, 1);
-
-	offset = TEMP_RS_TO_RSLOW_REG + RS_TO_RSLOW_CHG_OFFSET -
+ 	offset = TEMP_RS_TO_RSLOW_REG + RS_TO_RSLOW_CHG_OFFSET -
 		BATT_PROFILE_OFFSET;
 	memcpy(&chip->rslow_comp.rs_to_rslow, chip->batt_profile + offset, 2);
-
-	offset = RSLOW_COMP_REG + RSLOW_COMP_C1_OFFSET - BATT_PROFILE_OFFSET;
+ 	offset = RSLOW_COMP_REG + RSLOW_COMP_C1_OFFSET - BATT_PROFILE_OFFSET;
 	memcpy(&chip->rslow_comp.rslow_comp, chip->batt_profile + offset, 4);
 }
 
@@ -8583,7 +8570,7 @@ static int fg_memif_init(struct fg_chip *chip)
 			pr_err("failed to configure interrupt source %d\n", rc);
 			return rc;
 		}
-
+		
 		/* check for error condition */
 		rc = fg_check_ima_exception(chip, true);
 		if (rc) {
