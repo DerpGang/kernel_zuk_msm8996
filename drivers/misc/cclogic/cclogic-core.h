@@ -4,9 +4,7 @@
 #include <linux/wakelock.h>
 #include "cclogic-class.h"
 
-#define DEBUG
-
-#define DEV_STAGE_DEBUG 
+#define DEV_STAGE_DEBUG
 #define CCLOGIC_UPDATE_REAL_STATUS
 
 #ifdef DEBUG
