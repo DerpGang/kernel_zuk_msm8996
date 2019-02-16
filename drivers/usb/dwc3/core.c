@@ -45,6 +45,11 @@
 
 #include "debug.h"
 
+static int usb30_disabled = 1;
+module_param_call(usb30_disabled, NULL, param_get_int, &usb30_disabled, S_IRUGO);
+MODULE_PARM_DESC(usb30_disabled, "Disabled usb 3.0");
+
+struct dwc3             *tmp_dwc = NULL;
 /* -------------------------------------------------------------------------- */
 
 void dwc3_set_mode(struct dwc3 *dwc, u32 mode)
@@ -1004,6 +1009,8 @@ static int dwc3_probe(struct platform_device *pdev)
 		}
 	}
 	dwc3_notify_event(dwc, DWC3_CONTROLLER_POST_INITIALIZATION_EVENT, 0);
+
+	tmp_dwc = dwc;
 
 	return 0;
 

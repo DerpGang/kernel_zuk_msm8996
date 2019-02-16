@@ -152,7 +152,6 @@ static bool get_dload_mode(void)
 	return dload_mode_enabled;
 }
 
-#if 0
 static void enable_emergency_dload_mode(void)
 {
 	int ret;
@@ -177,7 +176,6 @@ static void enable_emergency_dload_mode(void)
 	if (ret)
 		pr_err("Failed to set secure EDLOAD mode: %d\n", ret);
 }
-#endif
 
 static int dload_set(const char *val, struct kernel_param *kp)
 {
@@ -205,12 +203,10 @@ static void set_dload_mode(int on)
 	return;
 }
 
-#if 0
 static void enable_emergency_dload_mode(void)
 {
 	pr_err("dload mode is not enabled on target\n");
 }
-#endif
 
 static bool get_dload_mode(void)
 {
@@ -284,9 +280,7 @@ static void msm_restart_prepare(const char *cmd)
 
 	if (qpnp_pon_check_hard_reset_stored()) {
 		/* Set warm reset as true when device is in dload mode */
-		if (get_dload_mode() ||
-			((cmd != NULL && cmd[0] != '\0') &&
-			!strcmp(cmd, "edl")))
+		if (get_dload_mode() || (cmd != NULL && cmd[0] != '\0'))
 			need_warm_reset = true;
 	} else {
 		need_warm_reset = (get_dload_mode() ||
@@ -301,7 +295,7 @@ static void msm_restart_prepare(const char *cmd)
 	if (need_warm_reset) {
 		qpnp_pon_system_pwr_off(PON_POWER_OFF_WARM_RESET);
 	} else {
-		qpnp_pon_system_pwr_off(PON_POWER_OFF_HARD_RESET);
+		qpnp_pon_system_pwr_off(PON_POWER_OFF_WARM_RESET);
 	}
 
 	if (cmd != NULL) {
@@ -336,10 +330,11 @@ static void msm_restart_prepare(const char *cmd)
 			if (!ret)
 				__raw_writel(0x6f656d00 | (code & 0xff),
 					     restart_reason);
-#if 0
 		} else if (!strncmp(cmd, "edl", 3)) {
 			enable_emergency_dload_mode();
-#endif
+		} else if (!strncmp(cmd, "dload", 5)) {
+			set_dload_mode(1);
+			in_panic = 1;
 		} else {
 			__raw_writel(0x77665501, restart_reason);
 		}
