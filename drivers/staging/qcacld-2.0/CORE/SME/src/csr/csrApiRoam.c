@@ -11044,6 +11044,8 @@ void csrRoamCheckForLinkStatusChange( tpAniSirGlobal pMac, tSirSmeRsp *pSirMsg )
                     if (!pCommand)
                     {
                         smsLog(pMac, LOGE, FL("cannot allocate memory"));
+                        if (pRoamInfo)
+                            vos_mem_free(pRoamInfo);
                         return;
                     }
                     vos_mem_set(pCommand, sizeof(tSmeCmd), 0);
@@ -18691,8 +18693,7 @@ eHalStatus csrRoamOffloadScan(tpAniSirGlobal pMac, tANI_U8 sessionId,
                        vos_nv_getChannelEnabledState(*ChannelList),
                        *ChannelList,
                        num_channels);
-	    }
-              ChannelList++;
+            ChannelList++;
         }
         pRequestBuf->ConnectedNetwork.ChannelCount = num_channels;
         /* If the profile changes as to what it was earlier, inform the
