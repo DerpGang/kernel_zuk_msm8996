@@ -19,8 +19,6 @@
 
 #include "power_supply.h"
 
-#define SUPPORT_LENUK_CUSTOM_BATTERY_MONITOR
-
 /*
  * This is because the name "current" breaks the device attr macro.
  * The "current" word resolves to "(get_current())" so instead of
@@ -233,12 +231,6 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(scope),
 	POWER_SUPPLY_ATTR(charge_term_current),
 	POWER_SUPPLY_ATTR(calibrate),
-#ifdef SUPPORT_LENUK_CUSTOM_BATTERY_MONITOR
-	POWER_SUPPLY_ATTR(ns_charger),
-	POWER_SUPPLY_ATTR(calling),
-	POWER_SUPPLY_ATTR(screen_on),
-	POWER_SUPPLY_ATTR(ship_mode),
-#endif
 	/* Local extensions */
 	POWER_SUPPLY_ATTR(usb_hc),
 	POWER_SUPPLY_ATTR(usb_otg),
