@@ -220,7 +220,7 @@ extern int gtp_int_gpio;
 #define GTP_MAX_WIDTH    4096
 #define GTP_INT_TRIGGER  1
 #endif
-#define GTP_MAX_TOUCH         5
+#define GTP_MAX_TOUCH         10
 
 // STEP_4(optional): If keys are available and reported as keys, config your key info here                             
 #if GTP_HAVE_TOUCH_KEY
