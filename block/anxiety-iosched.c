@@ -13,7 +13,7 @@
 static const unsigned int max_writes_starved = 8; /* max amount of times reads can starve pending writes */
 
 struct anxiety_data {
-	struct list_head queue[2];
+	struct list_head queue[2] ____cacheline_aligned;
 	unsigned int writes_starved;
 
 	/* tunables */
