@@ -9,7 +9,7 @@ delete_zip(){
   find . -name "*.zip" -type f -delete
 }
 build_package(){
-  cp -rf /home/prometheus*/ooo/out/arch/arm64/boot/Image.gz-dtb $anykernel/
+  cp -rf /home/prometheus*/statix/out/arch/arm64/boot/Image.gz-dtb $anykernel/
   zip -r9 UPDATE-AnyKernel3.zip * -x README UPDATE-AnyKernel3.zip
 }
 make_name(){
