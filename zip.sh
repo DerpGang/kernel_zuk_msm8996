@@ -1,7 +1,7 @@
 #!/bin/bash
 kernel_name="StatiX"
 device_name="z2_plus"
-zip_name="$kernel_name-Q-$device_name-$(date +"%m-%d").zip"
+zip_name="$kernel_name-Pie-$device_name-$(date +"%m-%d").zip"
 export anykernel="/home/prometheusXderpgang/AnyKernel3"
 delete_zip(){
   cd $anykernel

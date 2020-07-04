@@ -18,6 +18,7 @@
 		/delete-property/ i2c12;
 		/delete-property/ spi12;
 	};
+	/delete-node/ firmware;
 };
 
 &soc {
@@ -344,20 +345,3 @@
 &i2c_8 {
 	/delete-node/ nq@28;
 };
-
-&firmware {
-	android {
-		fstab {
-			/delete-node/ vendor;
-			system {
-				compatible = "android,system";
-                                dev = "/dev/block/platform/soc/7464900.sdhci/by-name/system";
-				type = "ext4";
-				mnt_flags = "ro,barrier=1,discard";
-				fsmgr_flags = "wait";
-				status = "ok";
-			};
-		};
-	};
-};
-
