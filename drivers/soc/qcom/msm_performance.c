@@ -367,8 +367,6 @@ static const struct kernel_param_ops param_ops_managed_online_cpus = {
 device_param_cb(managed_online_cpus, &param_ops_managed_online_cpus,
 							NULL, 0444);
 #endif
-<<<<<<< HEAD
-=======
 
 static int set_touchboost(const char *buf, const struct kernel_param *kp)
 {
@@ -393,7 +391,6 @@ static const struct kernel_param_ops param_ops_touchboost = {
 };
 device_param_cb(touchboost, &param_ops_touchboost, NULL, 0644);
 
->>>>>>> 1d1daea36bca... Fix last uninitialized warnings
 /*
  * Userspace sends cpu#:min_freq_value to vote for min_freq_value as the new
  * scaling_min. To withdraw its vote it needs to enter cpu#:0
